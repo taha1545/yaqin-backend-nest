@@ -2,12 +2,9 @@ import { ForbiddenException } from '@nestjs/common'
 import { UserRole } from 'generated/prisma/client'
 import type { Prisma } from 'generated/prisma/client'
 import type { ListUsersQueryDto } from '../dto'
+import type { AuthenticatedUser as Caller } from '@/common/interfaces'
 
-
-export interface Caller {
-    id: string
-    role: UserRole
-}
+export type { Caller };
 
 export const USER_INCLUDE = {
     parent: true,

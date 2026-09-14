@@ -17,14 +17,9 @@ export class JwtTokenService {
     this.refreshExpiresIn = config.get('auth.jwt.refreshExpiresIn', { infer: true, });
   }
 
-
   async signAccessToken(payload: JwtTokenPayload): Promise<string> {
-    return this.jwt.signAsync({
-      ...payload,
-      type: 'access',
-    });
+    return this.jwt.signAsync({ ...payload, type: 'access' });
   }
-
 
   async signRefreshToken(payload: JwtTokenPayload): Promise<string> {
     return this.jwt.signAsync(
@@ -45,10 +40,7 @@ export class JwtTokenService {
       this.signAccessToken(payload),
       this.signRefreshToken(payload),
     ]);
-    return {
-      accessToken,
-      refreshToken,
-    };
+    return { accessToken, refreshToken };
   }
 
 
@@ -72,9 +64,7 @@ export class JwtTokenService {
 
   private async verify(token: string, secret?: string): Promise<JwtPayload> {
     try {
-      return await this.jwt.verifyAsync<JwtPayload>(token, {
-        ...(secret && { secret }),
-      });
+      return await this.jwt.verifyAsync<JwtPayload>(token, { ...(secret && { secret }) });
     } catch {
       throw new UnauthorizedException('Invalid or expired token.');
     }

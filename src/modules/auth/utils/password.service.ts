@@ -18,8 +18,6 @@ export class PasswordService {
     }
 
     private bcryptRounds(): number {
-        return this.config.get('auth.bcryptRounds', {
-            infer: true,
-        })
+        return this.config.get('auth.bcryptRounds', { infer: true })
     }
 }

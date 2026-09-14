@@ -43,9 +43,7 @@ export class AuthRepo {
   }
 
   async ensureEmailAvailable(email: string, tx: Prisma.TransactionClient,): Promise<void> {
-    const existing = await tx.user.findUnique({
-      where: { email },
-    })
+    const existing = await tx.user.findUnique({ where: { email } })
     //
     if (existing) {
       throw new ConflictException(
@@ -71,6 +69,7 @@ export class AuthRepo {
         password: data.password,
         phone: data.phone,
         role: UserRole.PARENT,
+        isVerified: true,
         parent: {
           create: {},
         },
@@ -139,7 +138,7 @@ export class AuthRepo {
         password: data.password,
         phone: data.phone,
         role: UserRole.MEMBER,
-
+        
         member: {
           create: {
             target: data.target,
@@ -154,7 +153,6 @@ export class AuthRepo {
       },
     })
   }
-
 
 
   async attachGoogleId(userId: string, googleId: string,) {
@@ -211,9 +209,7 @@ export class AuthRepo {
     })
   }
 
-  safeUser<T extends User>(
-    user: T,
-  ) {
+  safeUser<T extends User>(user: T) {
     return toSafeUser(user)
   }
 

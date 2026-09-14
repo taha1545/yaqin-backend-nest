@@ -5,7 +5,6 @@ import type { OtpType } from 'generated/prisma/client';
 
 export const OTP_EXPIRES_MINUTES = 15;
 
-
 export function generateOtpCode(): string {
   return randomInt(100000, 1000000).toString();
 }
@@ -29,7 +28,6 @@ export function getOtpSubject(type: OtpType): string {
 export function getOtpEmailBody(type: OtpType, code: string,): string {
   //
   const action = type.toLowerCase().replaceAll('_', ' ');
-  //
   return `
     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 30px;">
       <h2 style="margin-bottom: 20px;">Yaqin</h2>

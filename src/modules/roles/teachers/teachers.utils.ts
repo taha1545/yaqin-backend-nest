@@ -1,13 +1,9 @@
 import { toSafeUser } from '@/common/utils'
-import type { Prisma, User, Module } from '../../../../generated/prisma/client'
-import type { UserRole } from '../../../../generated/prisma/client'
+import type { Prisma, User, Module } from 'generated/prisma/client'
 import type { ListTeachersQueryDto } from './dto'
+import type { AuthenticatedUser as Caller } from '@/common/interfaces'
 
-
-export interface Caller {
-  id: string
-  role: UserRole
-}
+export type { Caller };
 
 export const TEACHER_INCLUDE = {
   user: true,

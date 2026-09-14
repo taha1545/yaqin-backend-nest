@@ -10,8 +10,13 @@ import { AuthRepo } from './auth.repo'
 @Injectable()
 export class AuthService {
 
-  constructor(private readonly repo: AuthRepo, private readonly password: PasswordService, private readonly tokens: AuthTokenService,
-    private readonly cookies: AuthCookieService, private readonly otp: OtpService,) { }
+  constructor(
+    private readonly repo: AuthRepo,
+    private readonly password: PasswordService,
+    private readonly tokens: AuthTokenService,
+    private readonly cookies: AuthCookieService,
+    private readonly otp: OtpService
+  ) { }
 
   // Registration
 
@@ -104,7 +109,6 @@ export class AuthService {
   }
 
   logout(res: Response): void {
-    //
     this.cookies.clearRefreshToken(res)
   }
 

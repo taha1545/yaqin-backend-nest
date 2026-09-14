@@ -11,10 +11,7 @@ export class AuthCookieService {
     //
     constructor(private readonly config: ConfigService<AppConfig, true>) { }
 
-    setRefreshToken(
-        res: Response,
-        refreshToken: string,
-    ): void {
+    setRefreshToken(res: Response, refreshToken: string): void {
         res.cookie(
             REFRESH_TOKEN_COOKIE,
             refreshToken,
@@ -34,12 +31,7 @@ export class AuthCookieService {
             infer: true,
         })
         //
-        const expiresIn = this.config.get(
-            'auth.jwt.refreshExpiresIn',
-            {
-                infer: true,
-            },
-        )
+        const expiresIn = this.config.get('auth.jwt.refreshExpiresIn', { infer: true })
         //
         return {
             httpOnly: true,

@@ -12,11 +12,7 @@ export class ValidationException extends BadRequestException {
   }
 }
 
-function flattenErrors(
-  errors: ValidationError[],
-  target: Record<string, string>,
-  prefix: string,
-): void {
+function flattenErrors(errors: ValidationError[], target: Record<string, string>, prefix: string): void {
   for (const error of errors) {
     const key = prefix ? `${prefix}.${error.property}` : error.property
     if (error.constraints) {

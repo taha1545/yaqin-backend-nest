@@ -4,7 +4,8 @@ import { PrismaService } from '@/core';
 import { StorageService, resolveMimeType } from '@/core/storage';
 import type { CreateStudentDto, ListStudentsQueryDto, LoginByCodeDto, UpdateStudentDto, } from './dto';
 import { StudentsRepo } from './students.repo';
-import { buildOrderBy, buildRankingWhere, buildWhere, generateStudentCode } from './utils/helpers.students';
+import { buildOrderBy, buildRankingWhere, buildWhere } from './utils/helpers.students';
+import { generateStudentCode } from './utils/codeGenerate'
 import { STUDENT_IMAGE_VALIDATION } from './utils/storage.students';
 import type { Caller, StudentCaller, } from './utils/helpers.students';
 
@@ -85,7 +86,7 @@ export class StudentsService {
     }
     //
     return this.repo.create({
-      code: generateStudentCode(),
+      code: generateStudentCode(dto.fullName, dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined),
       parent: parentId ? { connect: { id: parentId } } : undefined,
       grade: { connect: { code: dto.gradeCode }, },
       semester: dto.semester,

@@ -10,12 +10,6 @@ export interface StudentCaller {
     code: string
 }
 
-export function generateStudentCode(): string {
-    return crypto.randomUUID()
-        .replaceAll('-', '')
-        .slice(0, 10)
-        .toUpperCase()
-}
 
 export const STUDENT_INCLUDE = {
     grade: true,

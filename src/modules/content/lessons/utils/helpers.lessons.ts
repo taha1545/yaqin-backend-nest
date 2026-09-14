@@ -1,9 +1,7 @@
-import type { Prisma, UserRole } from 'generated/prisma/client';
+import type { Prisma } from 'generated/prisma/client';
+import type { AuthenticatedUser as Caller } from '@/common/interfaces'
 
-export interface Caller {
-    id: string;
-    role: UserRole;
-}
+export type { Caller };
 
 export interface StudentCaller {
     code: string;

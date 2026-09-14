@@ -14,7 +14,6 @@ export class UsersService {
 
   async findAll(query: ListUsersQueryDto) {
     const where = buildWhere(query)
-    //
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
         where,
@@ -32,7 +31,6 @@ export class UsersService {
 
   async findOne(id: string, caller: Caller) {
     ensureAccess(id, caller);
-    //
     const user = await this.prisma.user.findUnique({
       where: { id },
       include: USER_INCLUDE,
