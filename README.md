@@ -1,5 +1,10 @@
 # Yaqin Backend
 
+[![NestJS](https://img.shields.io/badge/NestJS-11-e0234e)](https://nestjs.com)
+[![Node.js](https://img.shields.io/badge/Node.js-20-43853d)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6)](https://www.typescriptlang.org)
+[![Prisma](https://img.shields.io/badge/Prisma-7-2d3748)](https://www.prisma.io)
+
 > Yaqin is a structured, modular **NestJS educational backend** built around students, parents, teachers, members (content creators), and administrators.
 
 The backend powers an Algerian-oriented educational platform: it manages users and student accounts, organizes curriculum content (grades → modules → units → lessons), runs quiz challenges with automatic grading and XP, exposes dashboards for parents and students, and provides AI-powered features (lesson question generation and student performance reports) .
