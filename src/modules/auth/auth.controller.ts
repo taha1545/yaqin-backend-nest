@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport'
 
 import { CurrentUser, Public } from '@/common/decorators'
 import { AuthService } from './auth.service'
-import { ForgotPasswordDto, LoginDto, RegisterMemberDto, RegisterParentDto, RegisterTeacherDto, ResetPasswordDto } from './dto'
+import { ForgotPasswordDto, LoginDto, RegisterParentDto, RegisterTeacherDto, ResetPasswordDto } from './dto'
 
 @Controller('auth')
 export class AuthController {
@@ -26,15 +26,6 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   async registerTeacher(@Body() dto: RegisterTeacherDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.authService.registerTeacher(dto)
-    this.authService.setRefreshCookie(res, result.refreshToken)
-    return { user: result.user, accessToken: result.accessToken }
-  }
-
-  @Public()
-  @Post('register/member')
-  @HttpCode(HttpStatus.CREATED)
-  async registerMember(@Body() dto: RegisterMemberDto, @Res({ passthrough: true }) res: Response) {
-    const result = await this.authService.registerMember(dto)
     this.authService.setRefreshCookie(res, result.refreshToken)
     return { user: result.user, accessToken: result.accessToken }
   }

@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException, } from '@nestjs/common'
 import type { Response } from 'express'
-import { User } from 'generated/prisma/client'
+import { User, UserRole } from 'generated/prisma/client'
 import { OtpService } from '@/modules/otp'
-import type { ForgotPasswordDto, LoginDto, RegisterMemberDto, RegisterParentDto, RegisterTeacherDto, ResetPasswordDto, } from './dto'
+import type { ForgotPasswordDto, LoginDto, RegisterParentDto, RegisterTeacherDto, ResetPasswordDto, } from './dto'
 import { PasswordService, AuthCookieService, AuthTokenService, GoogleProfile } from './utils'
 import { AuthRepo } from './auth.repo'
 
@@ -58,27 +58,6 @@ export class AuthService {
     return this.buildAuthResult(user)
   }
 
-  async registerMember(dto: RegisterMemberDto,) {
-    const user = await this.repo.transaction(async (tx) => {
-      await this.repo.ensureEmailAvailable(dto.email, tx,);
-      const password = await this.password.hash(dto.password);
-      //
-      return this.repo.createMember(
-        {
-          email: dto.email,
-          name: dto.name,
-          password,
-          phone: dto.phone,
-          target: dto.target,
-        },
-        tx,
-      )
-    },
-    )
-    return this.buildAuthResult(user)
-  }
-
-
   // Authentication
 
   async login(dto: LoginDto) {
@@ -87,6 +66,10 @@ export class AuthService {
     //
     const valid = await this.password.compare(dto.password, user.password)
     if (!valid) throw new UnauthorizedException('Invalid credentials.',);
+    //
+    if (user.role !== UserRole.PARENT && user.role !== UserRole.TEACHER) {
+      throw new UnauthorizedException('Invalid credentials.')
+    }
     //
     return this.buildAuthResult(user)
   }

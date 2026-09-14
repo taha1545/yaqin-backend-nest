@@ -121,39 +121,6 @@ export class AuthRepo {
     })
   }
 
-  async createMember(
-    data: {
-      email: string
-      name: string
-      password: string
-      phone?: string
-      target?: string
-    },
-    tx: Prisma.TransactionClient,
-  ) {
-    return tx.user.create({
-      data: {
-        email: data.email,
-        name: data.name,
-        password: data.password,
-        phone: data.phone,
-        role: UserRole.MEMBER,
-        
-        member: {
-          create: {
-            target: data.target,
-          },
-        },
-      },
-      //
-      include: {
-        parent: true,
-        teacher: true,
-        member: true,
-      },
-    })
-  }
-
 
   async attachGoogleId(userId: string, googleId: string,) {
     return this.prisma.user.update({
