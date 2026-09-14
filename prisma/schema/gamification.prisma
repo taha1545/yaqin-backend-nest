@@ -1,0 +1,64 @@
+model XpTransaction {
+  id String @id @default(uuid()) @db.Uuid
+
+  studentCode String
+
+  amount      Int
+  source      String?
+  referenceId String? @db.Uuid
+
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentCode], references: [code], onDelete: Cascade)
+
+  @@index([studentCode, createdAt])
+  @@index([referenceId])
+}
+
+model StudentSkill {
+  id String @id @default(uuid()) @db.Uuid
+
+  studentCode String
+  skillId     String @db.Uuid
+
+  progress         Int @default(0)
+  totalLessons     Int @default(0)
+  remainingLessons Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student @relation(fields: [studentCode], references: [code], onDelete: Cascade)
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([studentCode, skillId])
+  @@index([skillId])
+}
+
+model Badge {
+  id String @id @default(uuid()) @db.Uuid
+
+  name        String  @unique
+  description String? @db.Text
+  imagePath   String?
+
+  xpReward Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students StudentBadge[]
+}
+
+model StudentBadge {
+  studentCode String
+  badgeId     String @db.Uuid
+
+  earnedAt DateTime @default(now())
+
+  student Student @relation(fields: [studentCode], references: [code], onDelete: Cascade)
+  badge   Badge   @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@id([studentCode, badgeId])
+  @@index([badgeId])
+}

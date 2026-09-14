@@ -1,0 +1,97 @@
+model StudentProgress {
+  id          String @id @default(uuid()) @db.Uuid
+  studentCode String
+  lessonId    String @db.Uuid
+  attemptId   String @unique @db.Uuid
+
+  status      ProgressStatus @default(NOT_STARTED)
+  progress    Int            @default(0)
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student     @relation(fields: [studentCode], references: [code], onDelete: Cascade)
+  lesson  Lesson      @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  attempt QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@unique([studentCode, lessonId])
+  @@index([lessonId, status])
+}
+
+model Question {
+  id       String @id @default(uuid()) @db.Uuid
+  lessonId String @db.Uuid
+
+  type          QuestionType
+  question      String       @db.Text
+  explanation   String?      @db.Text
+  correctAnswer String?      @db.Text
+  order         Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lesson      Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  options     QuestionOption[]
+  quizAnswers QuizAnswer[]
+
+  @@unique([lessonId, order])
+}
+
+model QuestionOption {
+  id         String @id @default(uuid()) @db.Uuid
+  questionId String @db.Uuid
+
+  text      String  @db.Text
+  isCorrect Boolean @default(false)
+  order     Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  question    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  quizAnswers QuizAnswer[]
+
+  @@unique([questionId, order])
+}
+
+model QuizAttempt {
+  id          String @id @default(uuid()) @db.Uuid
+  studentCode String
+  lessonId    String @db.Uuid
+
+  status      QuizAttemptStatus @default(IN_PROGRESS)
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student @relation(fields: [studentCode], references: [code], onDelete: Cascade)
+  lesson  Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  answers  QuizAnswer[]
+  progress StudentProgress?
+
+  @@unique([studentCode, lessonId])
+  @@index([studentCode, lessonId, createdAt])
+  @@index([lessonId])
+}
+
+model QuizAnswer {
+  id         String  @id @default(uuid()) @db.Uuid
+  attemptId  String  @db.Uuid
+  questionId String  @db.Uuid
+  optionId   String? @db.Uuid
+
+  answer    String?  @db.Text
+  isCorrect Boolean
+  createdAt DateTime @default(now())
+
+  attempt  QuizAttempt     @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question        @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  option   QuestionOption? @relation(fields: [optionId], references: [id], onDelete: SetNull)
+
+  @@unique([attemptId, questionId])
+  @@index([questionId])
+}

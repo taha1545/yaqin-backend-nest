@@ -1,0 +1,82 @@
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  name     String
+  imageKey String?
+
+  email    String  @unique
+  googleId String? @unique
+
+  phone    String?
+  password String?
+
+  role       UserRole @default(PARENT)
+  isVerified Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   Parent?
+  teacher  Teacher?
+  member   Member?
+  otps     Otp[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([googleId])
+}
+
+model Otp {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+
+  type      OtpType
+  code      String
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, type, expiresAt])
+}
+
+model Parent {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  students Student[]
+}
+
+model Teacher {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+
+  level  String
+  wilaya String
+  school String?
+  bio    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teacherModules TeacherModule[]
+
+  @@index([level, wilaya])
+}
+
+model Member {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+
+  target String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+}

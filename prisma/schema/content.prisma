@@ -1,0 +1,92 @@
+model Lesson {
+  id       String @id @default(uuid()) @db.Uuid
+  unitId   String @db.Uuid
+  memberId String @db.Uuid
+
+  title       String
+  description String?          @db.Text
+  content     String           @db.Text
+  difficulty  LessonDifficulty @default(EASY)
+
+  xp         Int          @default(0)
+  status     LessonStatus @default(DRAFT)
+  order      Int
+  minPresent Int?         @default(85)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Restrict)
+
+  resources LessonResource[]
+  skills    LessonSkill[]
+  progress  StudentProgress[]
+  questions Question[]
+  attempts  QuizAttempt[]
+  comments  Comment[]
+
+  @@unique([unitId, order])
+  @@index([memberId])
+  @@index([status])
+}
+
+model LessonResource {
+  id       String @id @default(uuid()) @db.Uuid
+  lessonId String @db.Uuid
+
+  type           ResourceType @default(DOCUMENT)
+  key            String
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
+}
+
+model Skill {
+  id String @id @default(uuid()) @db.Uuid
+
+  name        String
+  description String? @db.Text
+  target      String?
+
+  status LessonStatus @default(DRAFT)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students StudentSkill[]
+  lessons  LessonSkill[]
+
+  @@unique([name, target])
+}
+
+model LessonSkill {
+  lessonId String @db.Uuid
+  skillId  String @db.Uuid
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  skill  Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([lessonId, skillId])
+}
+
+model Comment {
+  id          String @id @default(uuid()) @db.Uuid
+  studentCode String
+  lessonId    String @db.Uuid
+
+  content String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student @relation(fields: [studentCode], references: [code], onDelete: Cascade)
+  lesson  Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId, createdAt])
+  @@index([studentCode])
+}

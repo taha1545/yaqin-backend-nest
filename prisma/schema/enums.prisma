@@ -1,0 +1,46 @@
+enum UserRole {
+  ADMIN
+  PARENT
+  TEACHER
+  MEMBER
+}
+
+enum OtpType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum LessonDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum LessonStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ResourceType {
+  VIDEO
+  DOCUMENT
+  IMAGE
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  FAILED
+  COMPLETED
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  TRUE_FALSE
+  SHORT_ANSWER
+}
+
+enum QuizAttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+}

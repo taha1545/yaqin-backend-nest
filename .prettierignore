@@ -1,0 +1,9 @@
+dist
+coverage
+generated
+node_modules
+package-lock.json
+prisma/migrations
+.agents
+agent.md
+db.md

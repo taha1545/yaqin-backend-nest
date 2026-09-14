@@ -1,0 +1,111 @@
+model Module {
+  code String @id
+
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  units          Unit[]
+  teacherModules TeacherModule[]
+}
+
+model TeacherModule {
+  teacherId  String @db.Uuid
+  moduleCode String
+
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  module  Module  @relation(fields: [moduleCode], references: [code], onDelete: Cascade)
+
+  @@id([teacherId, moduleCode])
+}
+
+model SchoolGrade {
+  code String @id
+
+  name  String
+  level String
+  year  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students Student[]
+  units    Unit[]
+
+  @@unique([name, level, year])
+  @@unique([level, year], name: "level_year")
+}
+
+model StudentReport {
+  id String @id @default(uuid()) @db.Uuid
+
+  studentCode String
+
+  report Json
+
+  coveredUntil DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student @relation(fields: [studentCode], references: [code], onDelete: Cascade)
+
+  @@index([studentCode, createdAt])
+}
+
+model Student {
+  code String @id
+
+  parentId  String? @db.Uuid
+  gradeCode String
+  semester  Int
+
+  fullName    String
+  dateOfBirth DateTime?
+  schoolName  String?
+  wilaya      String
+  xp          Int       @default(0)
+  imagePath   String?
+  deviceName  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent Parent?     @relation(fields: [parentId], references: [id], onDelete: SetNull)
+  grade  SchoolGrade @relation(fields: [gradeCode], references: [code], onDelete: Restrict)
+
+  xpTransactions XpTransaction[]
+  skills         StudentSkill[]
+  progress       StudentProgress[]
+  quizAttempts   QuizAttempt[]
+  badges         StudentBadge[]
+  reports        StudentReport[]
+  comments       Comment[]
+
+  @@index([parentId])
+  @@index([gradeCode, semester])
+  @@index([wilaya])
+}
+
+model Unit {
+  id String @id @default(uuid()) @db.Uuid
+
+  gradeCode  String
+  moduleCode String
+
+  semester    Int
+  title       String
+  description String? @db.Text
+  order       Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  grade  SchoolGrade @relation(fields: [gradeCode], references: [code], onDelete: Cascade)
+  module Module      @relation(fields: [moduleCode], references: [code], onDelete: Cascade)
+
+  lessons Lesson[]
+
+  @@unique([gradeCode, moduleCode, semester, order])
+  @@index([gradeCode, moduleCode, semester])
+}
