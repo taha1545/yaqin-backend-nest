@@ -23,6 +23,11 @@ import { GoogleStrategy } from './strategies'
     AuthCookieService,
     GoogleStrategy,
   ],
-  exports: [AuthService],
+  exports: [
+    AuthService,
+    PasswordService,
+    AuthTokenService,
+    AuthCookieService,
+  ],
 })
 export class AuthModule { }
