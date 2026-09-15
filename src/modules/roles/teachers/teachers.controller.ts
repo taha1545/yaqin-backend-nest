@@ -18,6 +18,12 @@ export class TeachersController {
     return this.service.findAll(query)
   }
 
+  @Get('admin')
+  @Roles(UserRole.ADMIN)
+  findAllAdmin(@Query() query: ListTeachersQueryDto) {
+    return this.service.findAllAdmin(query)
+  }
+
   @Public()
   @Get(':id')
   getById(@Param('id', ParseUuidPipe) id: string) {
@@ -36,11 +42,7 @@ export class TeachersController {
     return this.service.updateMe(dto, caller)
   }
 
-  @Get('admin')
-  @Roles(UserRole.ADMIN)
-  findAllAdmin(@Query() query: ListTeachersQueryDto) {
-    return this.service.findAllAdmin(query)
-  }
+
 
   @Post(':id/modules')
   @Roles(UserRole.TEACHER)

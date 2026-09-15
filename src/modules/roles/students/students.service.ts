@@ -86,7 +86,7 @@ export class StudentsService {
     }
     //
     return this.repo.create({
-      code: generateStudentCode(dto.fullName, dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined),
+      code: generateStudentCode(dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined),
       parent: parentId ? { connect: { id: parentId } } : undefined,
       grade: { connect: { code: dto.gradeCode }, },
       semester: dto.semester,

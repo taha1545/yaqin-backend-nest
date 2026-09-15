@@ -1,6 +1,6 @@
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'node:crypto';
 import type { AppConfig } from '@/config';
@@ -99,6 +99,27 @@ export class StorageService {
     }
   }
 
+  async getObject(key: string) {
+    try {
+      const result = await this.client.send(
+        new GetObjectCommand({
+          Bucket: this.bucket,
+          Key: key,
+        }),
+      );
+      //
+      if (!result.Body) throw new Error('File body is empty.');
+      const bytes = await result.Body.transformToByteArray();
+      //
+      return {
+        body: Buffer.from(bytes),
+        contentType: result.ContentType ?? 'application/octet-stream',
+      };
+    } catch (error) {
+      this.logError('Failed to get file.', error);
+      throw new NotFoundException('File not found.');
+    }
+  }
 
   // helpers
 

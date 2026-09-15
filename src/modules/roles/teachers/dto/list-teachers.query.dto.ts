@@ -1,4 +1,5 @@
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 import { PaginationDto } from '@/common/dto';
 
@@ -21,5 +22,12 @@ export class ListTeachersQueryDto extends PaginationDto {
   @IsString()
   search?: string;
 
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  @IsBoolean()
   isVerified?: boolean;
 }

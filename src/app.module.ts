@@ -8,6 +8,7 @@ import { CommonModule } from './common';
 
 import { AuthModule } from './modules/auth';
 import { OtpModule } from './modules/otp';
+import { AdminModule } from './modules/admin/admin.module'
 import { StorageApiModule } from './modules/storage';
 import { RolesModule } from './modules/roles/roles.module';
 import { ContentModule } from './modules/content/content.module';
@@ -34,7 +35,7 @@ import { AiModule } from './modules/ai/ai.module';
     ChallengesModule,
     DashboardModule,
     AiModule,
-
+    AdminModule
   ],
 })
 export class AppModule { }

@@ -7,62 +7,63 @@ import { SkillsService } from './skills.service'
 
 @Controller('skills')
 export class SkillsController {
-    //
     constructor(private readonly service: SkillsService) { }
 
     @Public()
     @Get()
     findAll(@Query() query: ListSkillsQueryDto) {
-        return this.service.findAll(query)
-    }
-
-    @Public()
-    @Get(':id')
-    findById(@Param('id') id: string) {
-        return this.service.findById(id)
+        return this.service.findAll(query);
     }
 
     // Member / Admin
-
     @Get('manage')
     @Roles(UserRole.MEMBER, UserRole.ADMIN)
-    findAllForMember(@Query() query: ListSkillsQueryDto,) {
-        return this.service.findAllForMember(query)
+    findAllForMember(@Query() query: ListSkillsQueryDto) {
+        return this.service.findAllForMember(query);
     }
 
     @Get('manage/:id')
     @Roles(UserRole.MEMBER, UserRole.ADMIN)
     findByIdForMember(@Param('id') id: string) {
-        return this.service.findByIdForMember(id)
+        return this.service.findByIdForMember(id);
     }
 
     @Post()
     @Roles(UserRole.MEMBER, UserRole.ADMIN)
     @HttpCode(HttpStatus.CREATED)
     create(@Body() dto: CreateSkillDto) {
-        return this.service.create(dto)
+        return this.service.create(dto);
     }
 
+    @Post(':id/lessons')
+    @Roles(UserRole.MEMBER, UserRole.ADMIN)
+    @HttpCode(HttpStatus.OK)
+    addLessons(
+        @Param('id') id: string,
+        @Body() dto: AddSkillLessonsDto,
+    ) {
+        return this.service.addLessons(id, dto);
+    }
+
+    @Public()
+    @Get(':id')
+    findById(@Param('id') id: string) {
+        return this.service.findById(id);
+    }
 
     @Patch(':id')
     @Roles(UserRole.MEMBER, UserRole.ADMIN)
-    update(@Param('id') id: string, @Body() dto: UpdateSkillDto) {
-        return this.service.update(id, dto)
+    update(
+        @Param('id') id: string,
+        @Body() dto: UpdateSkillDto,
+    ) {
+        return this.service.update(id, dto);
     }
-
 
     @Delete(':id')
     @Roles(UserRole.MEMBER, UserRole.ADMIN)
     @HttpCode(HttpStatus.OK)
     remove(@Param('id') id: string) {
-        return this.service.remove(id)
-    }
-
-
-    @Post(':id/lessons')
-    @Roles(UserRole.MEMBER, UserRole.ADMIN)
-    @HttpCode(HttpStatus.OK)
-    addLessons(@Param('id') id: string, @Body() dto: AddSkillLessonsDto) {
-        return this.service.addLessons(id, dto)
+        return this.service.remove(id);
     }
 }
