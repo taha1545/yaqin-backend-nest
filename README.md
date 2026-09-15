@@ -394,9 +394,6 @@ A Socket.IO layer is wired up via a custom `SocketIoAdapter` (CORS-aware) and a 
 - Each student is placed in a personal room (`student:<code>`), and presence is tracked in memory (`SocketPresenceService` — connect/disconnect counts, `isOnline`, active counts).
 - The gateway exposes `emitToStudent`, `emitToRoom`, and `broadcast` helpers.
 
-> **Status:** the real-time infrastructure (adapter, gateway, rooms, presence) is implemented and running, but no domain events are currently published to it — it is scaffolding ready for features such as live notifications or queues.
-
----
 
 ## AI Architecture
 
@@ -637,8 +634,6 @@ npm run start:dev
 **Student Login** — Complete/expand student authentication and login behavior.
 
 **Better Student Code Generation** — Improve the student-code generation strategy if necessary. Current codes use a human-readable name/random/date format.
-
-**Member Verification Endpoint** — Add a dedicated endpoint for members to check whether their account is verified.
 
 **Facebook Login** — Add Facebook OAuth authentication alongside Google OAuth.
 
